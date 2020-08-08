@@ -88,7 +88,7 @@
 Debug/
 Release/
 /ipch/
-
+/STM32F4/HelloWorld/MDK-ARM/
 # Library dir
 #lib/
 

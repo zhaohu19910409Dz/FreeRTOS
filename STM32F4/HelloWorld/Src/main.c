@@ -67,7 +67,7 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	int count;
+	int count = 0;
   /* USER CODE END 1 */
   
 
@@ -103,6 +103,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
 	HAL_Delay(1000);
+	count++;
 	printf("count=%d\r\n", count);
   }
   /* USER CODE END 3 */
