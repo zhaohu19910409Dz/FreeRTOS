@@ -6,9 +6,6 @@
 #define BMP280_CHID_ID 	  0x58
 #define BMP280_SLAVE_ADDR (0x77 << 1)
 
-
-//HAL_StatusTypeDef HAL_I2C_Mem_Read(I2C_HandleTypeDef *hi2c, uint16_t DevAddress,
-//uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData, uint16_t Size, uint32_t Timeout)
 void bmp280_init(void)
 {
 	HAL_StatusTypeDef status;
