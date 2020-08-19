@@ -27,6 +27,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */     
 #include <stdio.h>
+#include "bmp280.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -127,19 +128,15 @@ void MX_FREERTOS_Init(void) {
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void const * argument)
 {
-    
-    
-    
-
   /* USER CODE BEGIN StartDefaultTask */
 	int count = 0;
   /* Infinite loop */
   for(;;)
   {
     osDelay(500);
-	HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-	count++;
-	printf("LED Task count=%d\r\n", count);
+		HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+		//count++;
+		//printf("LED Task count=%d\r\n", count);
   }
   /* USER CODE END StartDefaultTask */
 }
@@ -157,7 +154,9 @@ void StartTask02(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    osDelay(1000);
+		float temp = bmp280_get_temp();
+		printf("%s: temp:%f\r\n", __func__, temp);
   }
   /* USER CODE END StartTask02 */
 }
