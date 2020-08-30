@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,14 +13,14 @@ import com.john.ctronnel.R;
 
 import java.util.List;
 
-public class LinearAdapter extends RecyclerView.Adapter<LinearAdapter.LinearViewHoler> {
+public class HorAdapter extends RecyclerView.Adapter<HorAdapter.LinearViewHoler> {
 
     private Context mContent;
     private LayoutInflater mInflater;
     private List<String> list;
 
     private OnItemClickListener mlistener;
-    public LinearAdapter(Context context, OnItemClickListener listener)
+    public HorAdapter(Context context, OnItemClickListener listener)
     {
         this.mContent = context;
         mInflater = LayoutInflater.from(context);
@@ -29,9 +28,9 @@ public class LinearAdapter extends RecyclerView.Adapter<LinearAdapter.LinearView
     }
     @NonNull
     @Override
-    public LinearAdapter.LinearViewHoler onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    public HorAdapter.LinearViewHoler onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        LinearViewHoler holder = new LinearViewHoler(mInflater.inflate(R.layout.layout_linear_recycle_view_item, parent, false));
+        LinearViewHoler holder = new LinearViewHoler(mInflater.inflate(R.layout.layout_hor_item, parent, false));
 
         return holder;
     }
