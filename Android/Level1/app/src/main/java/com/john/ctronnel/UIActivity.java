@@ -18,6 +18,7 @@ public class UIActivity extends AppCompatActivity {
     private Button WebView;
     private Button ToastView;
     private Button AlertDialogBtn;
+    private Button ProgressActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class UIActivity extends AppCompatActivity {
         WebView = (Button)findViewById(R.id.WebView);
         ToastView = (Button)findViewById(R.id.ToastView);
         AlertDialogBtn = (Button)findViewById(R.id.alertDialog);
+        ProgressActivity = (Button)findViewById(R.id.progessActivity);
         setListeners();
     }
 
@@ -44,6 +46,7 @@ public class UIActivity extends AppCompatActivity {
         WebView.setOnClickListener(onClick);
         ToastView.setOnClickListener(onClick);
         AlertDialogBtn.setOnClickListener(onClick);
+        ProgressActivity.setOnClickListener(onClick);
     }
 
     private class OnClick implements View.OnClickListener{
@@ -85,6 +88,11 @@ public class UIActivity extends AppCompatActivity {
                 case R.id.alertDialog:
                 {
                     intent = new Intent(UIActivity.this, AlertDialogActivity.class);
+                    break;
+                }
+                case R.id.progessActivity:
+                {
+                    intent = new Intent(UIActivity.this, ProgressActivity.class);
                     break;
                 }
             }

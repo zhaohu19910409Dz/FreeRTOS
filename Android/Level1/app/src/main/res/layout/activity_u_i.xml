@@ -154,6 +154,18 @@
             android:layout_below="@+id/ToastView"
             android:layout_marginTop="15dp"/>
 
+        <Button
+            android:id="@+id/progessActivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="progessActivity"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:background="#FF6600"
+            android:layout_below="@+id/alertDialog"
+            android:layout_marginTop="15dp"/>
+
 
     </RelativeLayout>
 </ScrollView>
