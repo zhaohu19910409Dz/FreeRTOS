@@ -26,7 +26,20 @@
         <activity android:name=".ImageActivity" />
         <activity android:name=".listView.ListActivity" />
         <activity android:name=".gridview.GridViewActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".LifeActiviy" />
+        <activity android:name=".jump.AActivity"
+            android:label="A"/>
+        <activity android:name=".jump.BActivity"
+            android:label="B">
+            <intent-filter>
+                <action android:name="com.john.zhao.BActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity"
+            android:label="My Application"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
