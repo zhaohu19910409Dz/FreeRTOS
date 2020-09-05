@@ -55,7 +55,7 @@ public class ProgressActivity extends AppCompatActivity {
                 dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        
+
                     }
                 });
                 dialog.setProgress(60);

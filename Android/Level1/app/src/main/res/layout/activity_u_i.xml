@@ -166,6 +166,30 @@
             android:layout_below="@+id/alertDialog"
             android:layout_marginTop="15dp"/>
 
+        <Button
+            android:id="@+id/customDialogActivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="customDialogActivity"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:background="#FF6600"
+            android:layout_below="@+id/progessActivity"
+            android:layout_marginTop="15dp"/>
+
+        <Button
+            android:id="@+id/popupWindowActivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="popupWindowActivity"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:background="#FF6600"
+            android:layout_below="@+id/customDialogActivity"
+            android:layout_marginTop="15dp"/>
+
 
     </RelativeLayout>
 </ScrollView>

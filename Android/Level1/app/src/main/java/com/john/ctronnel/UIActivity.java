@@ -19,6 +19,8 @@ public class UIActivity extends AppCompatActivity {
     private Button ToastView;
     private Button AlertDialogBtn;
     private Button ProgressActivity;
+    private Button CustomDialogActivity;
+    private Button PopupWindowActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,8 @@ public class UIActivity extends AppCompatActivity {
         ToastView = (Button)findViewById(R.id.ToastView);
         AlertDialogBtn = (Button)findViewById(R.id.alertDialog);
         ProgressActivity = (Button)findViewById(R.id.progessActivity);
+        CustomDialogActivity = (Button)findViewById(R.id.customDialogActivity);
+        PopupWindowActivity = (Button)findViewById(R.id.popupWindowActivity);
         setListeners();
     }
 
@@ -47,6 +51,8 @@ public class UIActivity extends AppCompatActivity {
         ToastView.setOnClickListener(onClick);
         AlertDialogBtn.setOnClickListener(onClick);
         ProgressActivity.setOnClickListener(onClick);
+        CustomDialogActivity.setOnClickListener(onClick);
+        PopupWindowActivity.setOnClickListener(onClick);
     }
 
     private class OnClick implements View.OnClickListener{
@@ -93,6 +99,16 @@ public class UIActivity extends AppCompatActivity {
                 case R.id.progessActivity:
                 {
                     intent = new Intent(UIActivity.this, ProgressActivity.class);
+                    break;
+                }
+                case R.id.customDialogActivity:
+                {
+                    intent = new Intent(UIActivity.this, CustomDialogActivity.class);
+                    break;
+                }
+                case R.id.popupWindowActivity:
+                {
+                    intent = new Intent(UIActivity.this, PopupWindowActivity.class);
                     break;
                 }
             }
