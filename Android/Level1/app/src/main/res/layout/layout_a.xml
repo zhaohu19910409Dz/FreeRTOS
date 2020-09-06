@@ -14,4 +14,13 @@
         android:textSize="20sp"
         android:textColor="@color/colorPrimaryDark"/>
 
+    <Button
+        android:id="@+id/jumpBtn1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="JumpToSelf"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textColor="@color/colorPrimaryDark"/>
+
 </LinearLayout>

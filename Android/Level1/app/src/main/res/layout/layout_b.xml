@@ -16,4 +16,10 @@
         android:layout_height="wrap_content"
         android:text="finish"/>
 
+    <Button
+        android:id="@+id/btn_finish1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="JumpToAActivity"
+        android:textAllCaps="false"/>
 </LinearLayout>

@@ -9,12 +9,15 @@ import android.widget.Button;
 
 import com.john.ctronnel.jump.AActivity;
 
+import com.john.ctronnel.fragment.ContinerActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button UIActivity;
     private Button ActivityBtn;
     private Button JumpActivity1;
     private Button JumpActivity2;
+    private Button FragmentActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityBtn = (Button)findViewById(R.id.bt2);
         JumpActivity1 = (Button)findViewById(R.id.bt3);
         JumpActivity2 = (Button)findViewById(R.id.bt4);
+        FragmentActivity = (Button)findViewById(R.id.bt5);
 
         setListeners();
     }
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityBtn.setOnClickListener(onClick);
         JumpActivity1.setOnClickListener(onClick);
         JumpActivity2.setOnClickListener(onClick);
+        FragmentActivity.setOnClickListener(onClick);
     }
 
     private class OnClick implements View.OnClickListener{
@@ -61,6 +66,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                 case R.id.bt4:
                 {
+                    break;
+                }
+                case R.id.bt5:
+                {
+                    intent = new Intent(MainActivity.this, ContinerActivity.class);
                     break;
                 }
             }

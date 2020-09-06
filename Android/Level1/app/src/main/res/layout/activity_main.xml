@@ -50,5 +50,16 @@
             android:layout_below="@+id/bt3"
             android:layout_marginTop="15dp"/>
 
+        <Button
+            android:id="@+id/bt5"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Fragment"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:background="#FF6600"
+            android:layout_below="@+id/bt4"
+            android:layout_marginTop="15dp"/>
+
     </RelativeLayout>
 </ScrollView>
