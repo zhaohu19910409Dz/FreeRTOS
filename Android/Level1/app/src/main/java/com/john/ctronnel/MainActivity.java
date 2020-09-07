@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
+import com.john.ctronnel.Data.DataStorageActivity;
 import com.john.ctronnel.jump.AActivity;
 
 import com.john.ctronnel.fragment.ContinerActivity;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private Button JumpActivity2;
     private Button FragmentActivity;
     private MyButton myBtn;
+    private Button DataBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         JumpActivity2 = (Button)findViewById(R.id.bt4);
         FragmentActivity = (Button)findViewById(R.id.bt5);
         myBtn = (MyButton)findViewById(R.id.myBtn);
+        DataBtn = (Button)findViewById(R.id.Data);
 
         setListeners();
 
@@ -55,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         JumpActivity2.setOnClickListener(onClick);
         FragmentActivity.setOnClickListener(onClick);
         myBtn.setOnClickListener(onClick);
+        DataBtn.setOnClickListener(onClick);
     }
 
     private class OnClick implements View.OnClickListener{
@@ -86,6 +90,15 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.bt5:
                 {
                     intent = new Intent(MainActivity.this, ContinerActivity.class);
+                    break;
+                }
+                case R.id.myBtn:
+                {
+                    break;
+                }
+                case R.id.Data:
+                {
+                    intent = new Intent(MainActivity.this, DataStorageActivity.class);
                     break;
                 }
             }

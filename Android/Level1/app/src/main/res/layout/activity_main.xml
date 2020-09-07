@@ -69,5 +69,16 @@
             android:textAllCaps="false"
             android:layout_below="@+id/bt5"/>
 
+        <Button
+            android:id="@+id/Data"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Data Story"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:background="#FF6600"
+            android:layout_below="@+id/myBtn"
+            android:layout_marginTop="15dp"/>
+
     </RelativeLayout>
 </ScrollView>
