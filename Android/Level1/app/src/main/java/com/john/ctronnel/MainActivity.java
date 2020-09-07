@@ -4,12 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
 import com.john.ctronnel.jump.AActivity;
 
 import com.john.ctronnel.fragment.ContinerActivity;
+import com.john.ctronnel.widget.MyButton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private Button JumpActivity1;
     private Button JumpActivity2;
     private Button FragmentActivity;
+    private MyButton myBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +33,17 @@ public class MainActivity extends AppCompatActivity {
         JumpActivity1 = (Button)findViewById(R.id.bt3);
         JumpActivity2 = (Button)findViewById(R.id.bt4);
         FragmentActivity = (Button)findViewById(R.id.bt5);
+        myBtn = (MyButton)findViewById(R.id.myBtn);
 
         setListeners();
+
+        myBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.d("MainActivity", "匿名类监听");
+                return false;
+            }
+        });
     }
 
     private void setListeners()
@@ -41,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         JumpActivity1.setOnClickListener(onClick);
         JumpActivity2.setOnClickListener(onClick);
         FragmentActivity.setOnClickListener(onClick);
+        myBtn.setOnClickListener(onClick);
     }
 
     private class OnClick implements View.OnClickListener{
@@ -74,7 +88,11 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 }
             }
-            startActivity(intent);
+
+            if(intent != null)
+            {
+                startActivity(intent);
+            }
         }
     }
 }
