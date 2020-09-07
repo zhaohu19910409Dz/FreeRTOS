@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".fragment.ContinerActivity"/>
+        <activity android:name=".HandlerActivity"></activity>
+        <activity android:name=".fragment.ContinerActivity" />
         <activity android:name=".PopupWindowActivity" />
         <activity android:name=".CustomDialogActivity" />
         <activity android:name=".ProgressActivity" />
@@ -31,7 +32,7 @@
         <activity
             android:name=".jump.AActivity"
             android:label="A"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop" />
         <activity
             android:name=".jump.BActivity"
             android:label="B"

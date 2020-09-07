@@ -43,7 +43,7 @@
             android:id="@+id/bt4"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="JumpActivityB"
+            android:text="HandleActivity"
             android:textAllCaps="false"
             android:textSize="20sp"
             android:background="#FF6600"

@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 case R.id.bt4:
                 {
+                    intent = new Intent(MainActivity.this, HandlerActivity.class);
                     break;
                 }
                 case R.id.bt5:
