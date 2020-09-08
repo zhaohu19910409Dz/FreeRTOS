@@ -2,8 +2,12 @@ package com.example.bleapp;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btn_Scan;
 
     private BroadcastReceiver_BTState mBTStateUpdateReceiver;
+    private Scanner_BTLE mBTLeScanner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +46,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             finish();
         }
 
+        ActivityCompat.requestPermissions(this, new String[]{
+                Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN
+        }, 1);
+
         mBTStateUpdateReceiver = new BroadcastReceiver_BTState(getApplicationContext());
+        mBTLeScanner = new Scanner_BTLE(this, 7500, -75);
 
         mBTDevicesHashMap = new HashMap<>();
         mBTDevicesArrayList = new ArrayList<>();
@@ -72,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
+        startScan();
     }
 
     @Override
@@ -79,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onStop();
 
         unregisterReceiver(mBTStateUpdateReceiver);
+        stopScan();
     }
 
     @Override
@@ -109,6 +121,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             case R.id.btn_scan:
                 Utils.toast(getApplicationContext(), "Scan Button Pressed");
+                if(!mBTLeScanner.isScanning())
+                {
+                    startScan();
+                }
+                else
+                {
+                    stopScan();
+                }
                 break;
             default:
                 break;
@@ -117,7 +137,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+    {
 
+    }
+
+    public void startScan()
+    {
+        btn_Scan.setText("Scanning...");
+        mBTDevicesArrayList.clear();
+        mBTDevicesHashMap.clear();
+
+        adapter.notifyDataSetChanged();
+        mBTLeScanner.start();
+    }
+
+    public void stopScan()
+    {
+        btn_Scan.setText("Scan Again");
+        mBTLeScanner.stop();
+
+    }
+
+    public void addDevice(BluetoothDevice bluetoothDevice, int i)
+    {
+        String address = bluetoothDevice.getAddress();
+        if(!mBTDevicesHashMap.containsKey(address))
+        {
+            BTLE_Device btle_device = new BTLE_Device(bluetoothDevice);
+            btle_device.setRSSI(i);
+
+            mBTDevicesHashMap.put(address, btle_device);
+            mBTDevicesArrayList.add(btle_device);
+        }
+        else
+        {
+            mBTDevicesHashMap.get(address).setRSSI(i);
+        }
+
+        adapter.notifyDataSetChanged();
     }
 }
