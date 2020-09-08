@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Data.SharedPreferenceActivity"></activity>
+        <activity android:name=".Data.FileActivity"></activity>
+        <activity android:name=".Data.SharedPreferenceActivity" />
         <activity android:name=".Data.DataStorageActivity" />
         <activity android:name=".HandlerActivity" />
         <activity android:name=".fragment.ContinerActivity" />

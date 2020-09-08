@@ -19,6 +19,9 @@ public class DataStorageActivity extends AppCompatActivity implements View.OnCli
 
         btn_sharedpreference = (Button)findViewById(R.id.btn_sharedpreference);
         btn_sharedpreference.setOnClickListener(this);
+
+        btn_file = (Button)findViewById(R.id.btn_file);
+        btn_file.setOnClickListener(this);
     }
 
 
@@ -29,6 +32,9 @@ public class DataStorageActivity extends AppCompatActivity implements View.OnCli
         {
             case R.id.btn_sharedpreference:
                 intent = new Intent(DataStorageActivity.this, SharedPreferenceActivity.class);
+                break;
+            case R.id.btn_file:
+                intent = new Intent(DataStorageActivity.this, FileActivity.class);
                 break;
         }
 
