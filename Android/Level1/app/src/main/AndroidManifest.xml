@@ -3,7 +3,7 @@
     package="com.john.ctronnel">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Data.FileActivity"></activity>
+        <activity android:name=".broadCast.BroadActivity2"></activity>
+        <activity android:name=".broadCast.BroadActivity" />
+        <activity android:name=".Data.FileActivity" />
         <activity android:name=".Data.SharedPreferenceActivity" />
         <activity android:name=".Data.DataStorageActivity" />
         <activity android:name=".HandlerActivity" />
