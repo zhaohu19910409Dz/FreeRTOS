@@ -1,7 +1,9 @@
 package com.john.ctronnel;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        ActivityCompat.requestPermissions(this, new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        },1);
     }
 
     private void setListeners()
