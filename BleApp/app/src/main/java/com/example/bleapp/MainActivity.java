@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         ActivityCompat.requestPermissions(this, new String[]{
-                Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN
+                Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN,
+                Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
         }, 1);
 
         mBTStateUpdateReceiver = new BroadcastReceiver_BTState(getApplicationContext());
