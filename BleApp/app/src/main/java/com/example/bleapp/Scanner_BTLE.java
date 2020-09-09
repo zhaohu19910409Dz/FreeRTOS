@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 
 
 public class Scanner_BTLE
@@ -43,11 +44,13 @@ public class Scanner_BTLE
     {
         if(!Utils.checkBluetooth(mBlutoothAdapter))
         {
+            Log.d("BLEAPP", "stopScan");
             Utils.requestUserBluetooth(ma);
             ma.stopScan();
         }
         else
         {
+            Log.d("BLEAPP", "scanLeDevice");
             scanLeDevice(true);
         }
     }
@@ -59,19 +62,24 @@ public class Scanner_BTLE
 
     private void scanLeDevice(final boolean enable)
     {
+        Log.d("BLEAPP", "scanLeDevice");
         if(enable && !mScanning) {
             Utils.toast(ma.getApplicationContext(), "Starting BLE Scan...");
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    Log.d("BLEAPP", "postDelayed");
                     Utils.toast(ma.getApplicationContext(), "Stopping BLE Scan...");
 
                     mScanning = false;
                     mBlutoothAdapter.stopLeScan(mLeScanCallback);
+                    //mBlutoothAdapter.getBluetoothLeScanner().stopScan(mLeScanCallback);
                     ma.stopScan();
                 }
             }, scanPeroid);
 
+
+            Log.d("BLEAPP", "startLeScan");
             mScanning = true;
             mBlutoothAdapter.startLeScan(mLeScanCallback);
         }
@@ -82,13 +90,15 @@ public class Scanner_BTLE
         @Override
         public void onLeScan(final BluetoothDevice bluetoothDevice, int i, byte[] bytes)
         {
+            Log.d("BLEAPP", "LeScanCallback");
             final int new_rssi = i;
             if(i > signalStrength)
             {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ma.addDevice(bluetoothDevice, i);
+                        Log.d("BLEAPP", "address:" + bluetoothDevice.getAddress());
+                        ma.addDevice(bluetoothDevice, new_rssi);
                     }
                 });
             }
