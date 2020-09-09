@@ -22,6 +22,11 @@ public class BTLE_Device {
         return bluetoothDevice.getName();
     }
 
+    public BluetoothDevice getDevice()
+    {
+        return bluetoothDevice;
+    }
+
     public void setRSSI(int rssi)
     {
         this.rssi = rssi;
