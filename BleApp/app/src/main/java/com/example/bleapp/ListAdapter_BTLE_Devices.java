@@ -2,6 +2,7 @@ package com.example.bleapp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +27,15 @@ public class ListAdapter_BTLE_Devices extends ArrayAdapter<BTLE_Device> {
         this.devices = objects;
     }
 
+    @Override
+    public int getCount() {
+        //return super.getCount();
+        return devices.size();
+    }
+
     public View getView(int position, View convertView, ViewGroup parent)
     {
+        Log.d("BLEAPP", "getView" + position);
         if(convertView == null)
         {
             LayoutInflater inflater = (LayoutInflater)activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
