@@ -30,8 +30,17 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+
+    public static final UUID GAP_UUID = UUID.fromString("00001800-0000-1000-8000-00805f9b34fb");
+    public static final UUID GATT_UUID = UUID.fromString("00001801-0000-1000-8000-00805f9b34fb");
+    public static final UUID BLE_RX_TX_UUID = UUID.fromString("65786365-6c70-6f69-6e74-2e636f6d00000");
+
+    public static final UUID CHARACTERISTIC_TX_UUID = UUID.fromString("65786365-6c70-6f69-6e74-2e636f6d00001");
+    public static final UUID CHARACTERISTIC_RX_UUID = UUID.fromString("65786365-6c70-6f69-6e74-2e636f6d0002");
+    public static final UUID DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
@@ -82,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_Scan.setOnClickListener(this);
 
         mGattCallback = new BluetoothGattCallback() {
+            //当连接上设备或者失去连接时会回调该函数
             @Override
             public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
                 super.onConnectionStateChange(gatt, status, newState);
@@ -99,46 +109,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
 
+            //当设备是否找到服务时，会回调该函数
             @Override
             public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                 super.onServicesDiscovered(gatt, status);
                 Log.d("BLEAPP", "onServicesDiscovered");
                 if(status == BluetoothGatt.GATT_SUCCESS)
                 {
-                    for(BluetoothGattService gattService  : gatt.getServices()) {
-                        List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
-                        for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics)
-                        { // 遍历每条服务里的所有Characteristic
-                            Log.d("BLEAPP", "UUID:"+gattCharacteristic.getUuid().toString());
-                            //if (gattCharacteristic.getUuid().toString().equalsIgnoreCase(""))
-                            {
-                                // 有哪些UUID，每个UUID有什么属性及作用，一般硬件工程师都会给相应的文档。我们程序也可以读取其属性判断其属性。
-                                // 此处可以可根据UUID的类型对设备进行读操作，写操作，设置notification等操作
-                                // BluetoothGattCharacteristic gattNoticCharacteristic 假设是可设置通知的Characteristic
-                                // BluetoothGattCharacteristic gattWriteCharacteristic 假设是可读的Characteristic
-                                // BluetoothGattCharacteristic gattReadCharacteristic  假设是可写的Characteristic
-                            }
+                    //在这里可以对服务进行解析，寻找到你需要的服务
+                    BluetoothGattService gapServer = gatt.getService(GAP_UUID);
+                    LogInfo(gatt, gapServer, "gap");
 
-                        }
-                    }
+                    BluetoothGattService gattService = gatt.getService(GATT_UUID);
+                    LogInfo(gatt, gattService, "gatt");
+
+                    BluetoothGattService rtxServer = gatt.getService(BLE_RX_TX_UUID);
+                    LogInfo(gatt, rtxServer, "rx tx");
+//                    if(server != null)
+//                    {
+//                        Log.d("BLEAPP", "find Service by UUID");
+//                        List<BluetoothGattCharacteristic> gattCharacteristics = server.getCharacteristics();
+//                        for(BluetoothGattCharacteristic gattCharacteristic  : gattCharacteristics)
+//                        {
+//                            Log.d("BLEAPP", "UUID:"+gattCharacteristic.getUuid().toString());
+//
+//                            gatt.setCharacteristicNotification(gattCharacteristic, true);
+//                            BluetoothGattDescriptor descriptor = gattCharacteristic.getDescriptor(DESCRIPTOR_UUID);
+//                            descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
+//                            gatt.writeDescriptor(descriptor);
+//                        }
+//                    }
                 }
                 else
                 {
                 }
             }
 
+            //当读取设备时会回调该函数
             @Override
             public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
                 super.onCharacteristicRead(gatt, characteristic, status);
                 Log.d("BLEAPP", "onCharacteristicRead");
             }
 
+            //设备发出通知时会调用到该接口
             @Override
             public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
                 super.onCharacteristicChanged(gatt, characteristic);
                 Log.d("BLEAPP", "onCharacteristicChanged");
             }
 
+            //当向设备Descriptor中写数据时，会回调该函数
             @Override
             public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
                 super.onDescriptorWrite(gatt, descriptor, status);
@@ -150,7 +171,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 super.onReadRemoteRssi(gatt, rssi, status);
                 Log.d("BLEAPP", "onReadRemoteRssi");
             }
+
+            //当向Characteristic写数据时会回调该函数
+            @Override
+            public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+                super.onCharacteristicWrite(gatt, characteristic, status);
+                Log.d("BLEAPP", "onCharacteristicWrite");
+            }
         };
+    }
+
+    public void LogInfo(BluetoothGatt gatt, BluetoothGattService server, String name)
+    {
+        if(server != null)
+        {
+            Log.d("BLEAPP", name + ":find Service by UUID");
+            List<BluetoothGattCharacteristic> gattCharacteristics = server.getCharacteristics();
+            for(BluetoothGattCharacteristic gattCharacteristic  : gattCharacteristics)
+            {
+                Log.d("BLEAPP", "UUID:"+gattCharacteristic.getUuid().toString());
+
+                List<BluetoothGattDescriptor> gattDescriptors = gattCharacteristic.getDescriptors();
+                for(BluetoothGattDescriptor descriptor : gattDescriptors)
+                {
+                    Log.d("BLEAPP", "Descriptor UUID:" + descriptor.getUuid());
+                }
+
+            }
+        }
     }
 
     @Override
