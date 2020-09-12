@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.john.ctronnel.Data.DataStorageActivity;
+import com.john.ctronnel.broadCast.BroadActivity;
 import com.john.ctronnel.jump.AActivity;
 
 import com.john.ctronnel.fragment.ContinerActivity;
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 case R.id.myBtn:
                 {
+                    intent = new Intent(MainActivity.this, BroadActivity.class);
                     break;
                 }
                 case R.id.Data:
