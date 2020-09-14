@@ -186,6 +186,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 }
                 else
                 {
+                    XToast.warning(LoginActivity.this, "请检查设备的网络设置！！！").show();
                     Log.d("John", "errorid:" + e.getErrorCode() + "errorinfo:"+e.getMessage());
                 }
             }

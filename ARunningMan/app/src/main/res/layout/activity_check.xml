@@ -45,7 +45,7 @@
             app:vcet_is_pwd="false"
             app:vcet_number="6"
             app:vcet_pwd_radius="10dp"
-            app:vcet_text_color="@color/black"
+            app:vcet_text_color="@color/main_bac"
             app:vcet_text_size="24sp"
             app:vcet_width="50dp"/>
 
@@ -59,7 +59,7 @@
         android:layout_marginEnd="20dp"
         android:padding="10dp"
         android:text="59s"
-        android:textColor="@color/white"
+        android:textColor="@color/main_white"
         android:textSize="14sp"
         android:textStyle="bold"
         android:theme="@style/Theme.MaterialComponents.Light"
