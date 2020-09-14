@@ -65,7 +65,7 @@
             android:id="@+id/myBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="my Button"
+            android:text="Boardcast"
             android:textAllCaps="false"
             android:layout_below="@+id/bt5"/>
 
