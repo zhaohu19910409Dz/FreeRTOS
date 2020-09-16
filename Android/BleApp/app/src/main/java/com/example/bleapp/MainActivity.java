@@ -1,5 +1,6 @@
 package com.example.bleapp;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -19,6 +20,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -34,14 +37,6 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
-    public static final UUID GAP_UUID = UUID.fromString("00001800-0000-1000-8000-00805f9b34fb");
-    public static final UUID GATT_UUID = UUID.fromString("00001801-0000-1000-8000-00805f9b34fb");
-    public static final UUID BLE_RX_TX_UUID = UUID.fromString("65786365-6c70-6f69-6e74-2e636f6d00000");
-
-    public static final UUID CHARACTERISTIC_TX_UUID = UUID.fromString("65786365-6c70-6f69-6e74-2e636f6d00001");
-    public static final UUID CHARACTERISTIC_RX_UUID = UUID.fromString("65786365-6c70-6f69-6e74-2e636f6d0002");
-    public static final UUID DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-
     private final static String TAG = MainActivity.class.getSimpleName();
 
     public static final int REQUEST_ENABLE_BT = 1;
@@ -56,7 +51,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Scanner_BTLE mBTLeScanner;
 
     BluetoothGatt mGatt = null;
-    private BluetoothGattCallback mGattCallback;
+    private MyGattCallBack mGattCallback;
+
+    BluetoothGattService rtxServer = null;
+    BluetoothGattCharacteristic gattCharacteristic = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,112 +88,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_Scan = (Button)findViewById(R.id.btn_scan);
         btn_Scan.setOnClickListener(this);
 
-        mGattCallback = new BluetoothGattCallback() {
-            //当连接上设备或者失去连接时会回调该函数
-            @Override
-            public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-                super.onConnectionStateChange(gatt, status, newState);
-                Log.d("BLEAPP", "onConnectionStateChange");
-                if(newState == BluetoothProfile.STATE_CONNECTED)
-                {
-                    if(mGatt != null)
-                    {
-                        mGatt.discoverServices();
-                    }
-                }
-                else if(newState == BluetoothProfile.STATE_DISCONNECTED)
-                {
-
-                }
-            }
-
-            //当设备是否找到服务时，会回调该函数
-            @Override
-            public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-                super.onServicesDiscovered(gatt, status);
-                Log.d("BLEAPP", "onServicesDiscovered");
-                if(status == BluetoothGatt.GATT_SUCCESS)
-                {
-                    //在这里可以对服务进行解析，寻找到你需要的服务
-                    BluetoothGattService gapServer = gatt.getService(GAP_UUID);
-                    LogInfo(gatt, gapServer, "gap");
-
-                    BluetoothGattService gattService = gatt.getService(GATT_UUID);
-                    LogInfo(gatt, gattService, "gatt");
-
-                    BluetoothGattService rtxServer = gatt.getService(BLE_RX_TX_UUID);
-                    LogInfo(gatt, rtxServer, "rx tx");
-//                    if(server != null)
-//                    {
-//                        Log.d("BLEAPP", "find Service by UUID");
-//                        List<BluetoothGattCharacteristic> gattCharacteristics = server.getCharacteristics();
-//                        for(BluetoothGattCharacteristic gattCharacteristic  : gattCharacteristics)
-//                        {
-//                            Log.d("BLEAPP", "UUID:"+gattCharacteristic.getUuid().toString());
-//
-//                            gatt.setCharacteristicNotification(gattCharacteristic, true);
-//                            BluetoothGattDescriptor descriptor = gattCharacteristic.getDescriptor(DESCRIPTOR_UUID);
-//                            descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
-//                            gatt.writeDescriptor(descriptor);
-//                        }
-//                    }
-                }
-                else
-                {
-                }
-            }
-
-            //当读取设备时会回调该函数
-            @Override
-            public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-                super.onCharacteristicRead(gatt, characteristic, status);
-                Log.d("BLEAPP", "onCharacteristicRead");
-            }
-
-            //设备发出通知时会调用到该接口
-            @Override
-            public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-                super.onCharacteristicChanged(gatt, characteristic);
-                Log.d("BLEAPP", "onCharacteristicChanged");
-            }
-
-            //当向设备Descriptor中写数据时，会回调该函数
-            @Override
-            public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-                super.onDescriptorWrite(gatt, descriptor, status);
-                Log.d("BLEAPP", "onDescriptorWrite");
-            }
-
-            @Override
-            public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-                super.onReadRemoteRssi(gatt, rssi, status);
-                Log.d("BLEAPP", "onReadRemoteRssi");
-            }
-
-            //当向Characteristic写数据时会回调该函数
-            @Override
-            public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-                super.onCharacteristicWrite(gatt, characteristic, status);
-                Log.d("BLEAPP", "onCharacteristicWrite");
-            }
-        };
+        //mGattCallback = new MyGattCallBack();
     }
 
     public void LogInfo(BluetoothGatt gatt, BluetoothGattService server, String name)
     {
         if(server != null)
         {
-            Log.d("BLEAPP", name + ":find Service by UUID");
             List<BluetoothGattCharacteristic> gattCharacteristics = server.getCharacteristics();
             for(BluetoothGattCharacteristic gattCharacteristic  : gattCharacteristics)
             {
                 Log.d("BLEAPP", "UUID:"+gattCharacteristic.getUuid().toString());
-
                 List<BluetoothGattDescriptor> gattDescriptors = gattCharacteristic.getDescriptors();
-                for(BluetoothGattDescriptor descriptor : gattDescriptors)
-                {
-                    Log.d("BLEAPP", "Descriptor UUID:" + descriptor.getUuid());
-                }
 
             }
         }
@@ -288,11 +192,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d("BLEAPP", "Name:" +name + "Address:" + address);
 
         BluetoothDevice device = getDevice(address);
+        MyDeviceInstance.getInstance().setBluetoothDevice(device);
         if(device != null)
         {
             Log.d("BLEAPP", "Find Device !!!!");
-            mGatt = device.connectGatt(this, false, mGattCallback);
 
+            //mGatt = device.connectGatt(this, false, mGattCallback);
+            Intent intent = new Intent(MainActivity.this, HandleDataActivity.class);
+            startActivity(intent);
         }
     }
 
