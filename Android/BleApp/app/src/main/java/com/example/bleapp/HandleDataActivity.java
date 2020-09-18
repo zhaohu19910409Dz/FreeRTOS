@@ -66,10 +66,9 @@ public class HandleDataActivity extends AppCompatActivity implements View.OnClic
             case R.id.btnSend:
             {
                 Log.d("BLEAPP", "Send data");
-                byte[] data = {11, 22, 33,44};
+                byte[] data = {(byte) 0xAA, 0x13, 0x00};
                 MyDeviceInstance.getInstance().getGattCharacteristic().setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-                String info = editText.getText().toString();
-                MyDeviceInstance.getInstance().getGattCharacteristic().setValue(info);
+                MyDeviceInstance.getInstance().getGattCharacteristic().setValue(data);
                 MyDeviceInstance.getInstance().getGatt().writeCharacteristic(MyDeviceInstance.getInstance().getGattCharacteristic());
             }
             break;

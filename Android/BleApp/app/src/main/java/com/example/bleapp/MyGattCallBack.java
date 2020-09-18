@@ -14,6 +14,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.UUID;
 
 public class MyGattCallBack extends BluetoothGattCallback {
@@ -59,12 +61,7 @@ public class MyGattCallBack extends BluetoothGattCallback {
         Log.d("BLEAPP", "onServicesDiscovered");
         if(status == BluetoothGatt.GATT_SUCCESS)
         {
-//                    List<BluetoothGattService> services = gatt.getServices();
-//                    for(BluetoothGattService server: services)
-//                    {
-//                        Log.d("BLEAPP", "service UUID:"+server.getUuid().toString());
-//                    }
-
+            MyDeviceInstance.getInstance().setGatt(gatt);
             //在这里可以对服务进行解析，寻找到你需要的服务
             Log.d("BLEAPP", "GAP UUID");
             BluetoothGattService gapServer = gatt.getService(GAP_UUID);
@@ -73,13 +70,34 @@ public class MyGattCallBack extends BluetoothGattCallback {
             BluetoothGattService gattService = gatt.getService(GATT_UUID);
 
             Log.d("BLEAPP", "BLE_RX_TX_UUID UUID");
-            mGatt = gatt;
+            /*
+            * set read character
+            */
             rtxGattServer = gatt.getService(BLE_RX_TX_UUID);
+            gattCharacteristic = rtxGattServer.getCharacteristic(CHARACTERISTIC_TX_UUID);
+            //boolean bNotify = gatt.setCharacteristicNotification(gattCharacteristic, true);
+            //if(bNotify)
+            {
+                List<BluetoothGattDescriptor> descriptors = gattCharacteristic.getDescriptors();
+                for (BluetoothGattDescriptor descriptor : descriptors)
+                {
+                    if((gattCharacteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0)
+                    {
+                        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                    }
+                    else if((gattCharacteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0)
+                    {
+                        descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
+                    }
+                    gatt.writeDescriptor(descriptor);
+                }
+                gatt.setCharacteristicNotification(gattCharacteristic, true);
+            }
+            //BluetoothGattDescriptor descriptor = gattCharacteristic.getDescriptor()
             gattCharacteristic = rtxGattServer.getCharacteristic(CHARACTERISTIC_RX_UUID);
             if(gattCharacteristic != null)
             {
                 Log.d("BLEAPP", "BLE_RX_TX_UUID UUID");
-                MyDeviceInstance.getInstance().setGatt(mGatt);
                 MyDeviceInstance.getInstance().setRtxGattServer(rtxGattServer);
                 MyDeviceInstance.getInstance().setGattCharacteristic(gattCharacteristic);
                 handler.sendEmptyMessageDelayed(1001, 1000);
@@ -103,6 +121,14 @@ public class MyGattCallBack extends BluetoothGattCallback {
     public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         super.onCharacteristicChanged(gatt, characteristic);
         Log.d("BLEAPP", "onCharacteristicChanged");
+        try
+        {
+            String version = new String(gattCharacteristic.getValue(), "UTF-8");
+            Log.d("Data", "info:" + version);
+        } catch (UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     //当向设备Descriptor中写数据时，会回调该函数
@@ -124,5 +150,11 @@ public class MyGattCallBack extends BluetoothGattCallback {
         super.onCharacteristicWrite(gatt, characteristic, status);
         Log.d("BLEAPP", "onCharacteristicWrite" + characteristic.getValue().toString());
 
+    }
+
+    @Override
+    public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+        super.onDescriptorRead(gatt, descriptor, status);
+        Log.d("BLEAPP", "onDescriptorRead");
     }
 }
