@@ -22,17 +22,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.LoginActivity">
+
+        </activity>
+        <activity android:name=".activity.CheckActivity"></activity>
+        <activity android:name=".activity.HomeActivity"></activity>
+        <activity android:name=".activity.TakeActivity"></activity>
+        <activity android:name=".activity.SelectActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.CheckActivity"></activity>
-        <activity android:name=".activity.HomeActivity"></activity>
-        <activity android:name=".MainActivity">
-
-        </activity>
+        <activity android:name=".MainActivity"></activity>
 
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
