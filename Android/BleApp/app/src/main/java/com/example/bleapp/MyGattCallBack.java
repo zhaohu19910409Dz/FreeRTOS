@@ -1,0 +1,160 @@
+package com.example.bleapp;
+
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattService;
+import android.bluetooth.BluetoothProfile;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.UUID;
+
+public class MyGattCallBack extends BluetoothGattCallback {
+
+    public static final UUID GAP_UUID = UUID.fromString("00001800-0000-1000-8000-00805f9b34fb");
+    public static final UUID GATT_UUID = UUID.fromString("00001801-0000-1000-8000-00805f9b34fb");
+    public static final UUID BLE_RX_TX_UUID = UUID.fromString("65786365-6c70-6f69-6e74-2e636f6d0000");
+
+    public static final UUID CHARACTERISTIC_TX_UUID = UUID.fromString("65786365-6c70-6f69-6e74-2e636f6d0001");
+    public static final UUID CHARACTERISTIC_RX_UUID = UUID.fromString("65786365-6c70-6f69-6e74-2e636f6d0002");
+
+    private BluetoothGatt mGatt;
+    private BluetoothGattService rtxGattServer;
+    private BluetoothGattCharacteristic gattCharacteristic;
+
+    private Handler handler;
+    public MyGattCallBack(Handler handler)
+    {
+        this.handler = handler;
+    }
+    //当连接上设备或者失去连接时会回调该函数
+    @Override
+    public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+        super.onConnectionStateChange(gatt, status, newState);
+        Log.d("BLEAPP", "onConnectionStateChange");
+        if(newState == BluetoothProfile.STATE_CONNECTED)
+        {
+            if(gatt != null)
+            {
+                gatt.discoverServices();
+            }
+        }
+        else if(newState == BluetoothProfile.STATE_DISCONNECTED)
+        {
+
+        }
+    }
+
+    //当设备是否找到服务时，会回调该函数
+    @Override
+    public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+        super.onServicesDiscovered(gatt, status);
+        Log.d("BLEAPP", "onServicesDiscovered");
+        if(status == BluetoothGatt.GATT_SUCCESS)
+        {
+            MyDeviceInstance.getInstance().setGatt(gatt);
+            //在这里可以对服务进行解析，寻找到你需要的服务
+            Log.d("BLEAPP", "GAP UUID");
+            BluetoothGattService gapServer = gatt.getService(GAP_UUID);
+
+            Log.d("BLEAPP", "GATT UUID");
+            BluetoothGattService gattService = gatt.getService(GATT_UUID);
+
+            Log.d("BLEAPP", "BLE_RX_TX_UUID UUID");
+            /*
+            * set read character
+            */
+            rtxGattServer = gatt.getService(BLE_RX_TX_UUID);
+            gattCharacteristic = rtxGattServer.getCharacteristic(CHARACTERISTIC_TX_UUID);
+            //boolean bNotify = gatt.setCharacteristicNotification(gattCharacteristic, true);
+            //if(bNotify)
+            {
+                List<BluetoothGattDescriptor> descriptors = gattCharacteristic.getDescriptors();
+                for (BluetoothGattDescriptor descriptor : descriptors)
+                {
+                    if((gattCharacteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0)
+                    {
+                        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                    }
+                    else if((gattCharacteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0)
+                    {
+                        descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
+                    }
+                    gatt.writeDescriptor(descriptor);
+                }
+                gatt.setCharacteristicNotification(gattCharacteristic, true);
+            }
+            //BluetoothGattDescriptor descriptor = gattCharacteristic.getDescriptor()
+            gattCharacteristic = rtxGattServer.getCharacteristic(CHARACTERISTIC_RX_UUID);
+            if(gattCharacteristic != null)
+            {
+                Log.d("BLEAPP", "BLE_RX_TX_UUID UUID");
+                MyDeviceInstance.getInstance().setRtxGattServer(rtxGattServer);
+                MyDeviceInstance.getInstance().setGattCharacteristic(gattCharacteristic);
+                handler.sendEmptyMessageDelayed(1001, 1000);
+                //handler.sendEmptyMessageDelayed(1000, 1000);
+            }
+        }
+        else
+        {
+        }
+    }
+
+    //当读取设备时会回调该函数
+    @Override
+    public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+        super.onCharacteristicRead(gatt, characteristic, status);
+        Log.d("BLEAPP", "onCharacteristicRead");
+    }
+
+    //设备发出通知时会调用到该接口
+    @Override
+    public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+        super.onCharacteristicChanged(gatt, characteristic);
+        Log.d("BLEAPP", "onCharacteristicChanged");
+        try
+        {
+            String version = new String(gattCharacteristic.getValue(), "UTF-8");
+            Log.d("Data", "info:" + version);
+        } catch (UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    //当向设备Descriptor中写数据时，会回调该函数
+    @Override
+    public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+        super.onDescriptorWrite(gatt, descriptor, status);
+        Log.d("BLEAPP", "onDescriptorWrite");
+    }
+
+    @Override
+    public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
+        super.onReadRemoteRssi(gatt, rssi, status);
+        Log.d("BLEAPP", "onReadRemoteRssi");
+    }
+
+    //当向Characteristic写数据时会回调该函数
+    @Override
+    public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+        super.onCharacteristicWrite(gatt, characteristic, status);
+        Log.d("BLEAPP", "onCharacteristicWrite" + characteristic.getValue().toString());
+
+    }
+
+    @Override
+    public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+        super.onDescriptorRead(gatt, descriptor, status);
+        Log.d("BLEAPP", "onDescriptorRead");
+    }
+}
