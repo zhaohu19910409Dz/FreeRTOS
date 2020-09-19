@@ -15,6 +15,12 @@ import john.zhao.arunningman.model.SelectInfo;
 
 public class SelectRecycleAdapter extends RecyclerView.Adapter<SelectRecycleAdapter.ViewHolder> {
     private List<SelectInfo> list;
+    private OnItemClickListener onItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
     public void setList(List<SelectInfo> list)
     {
         this.list = list;
@@ -32,6 +38,15 @@ public class SelectRecycleAdapter extends RecyclerView.Adapter<SelectRecycleAdap
     public void onBindViewHolder(@NonNull SelectRecycleAdapter.ViewHolder holder, int position) {
         holder.tvAddress.setText(list.get(position).getAddress());
         holder.tvCity.setText(list.get(position).getCity());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(onItemClickListener != null)
+                {
+                    onItemClickListener.OnClick(list.get(position));
+                }
+            }
+        });
     }
 
     @Override
@@ -48,5 +63,9 @@ public class SelectRecycleAdapter extends RecyclerView.Adapter<SelectRecycleAdap
             tvAddress = itemView.findViewById(R.id.tv_address_search_select);
             tvCity = itemView.findViewById(R.id.tv_city_search_select);
         }
+    }
+
+    public interface OnItemClickListener{
+        void OnClick(SelectInfo selectInfo);
     }
 }

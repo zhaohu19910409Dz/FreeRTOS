@@ -1,10 +1,12 @@
 package john.zhao.arunningman.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
@@ -39,6 +41,7 @@ public class SelectActivity extends BaseActivity {
     private LatLng selectLatLng;
 
     private SelectRecycleAdapter adapter;
+    private InputMethodManager inputMethodManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +58,8 @@ public class SelectActivity extends BaseActivity {
     public void init() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_select);
         binding.setSelectActivity(this);
+
+        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
@@ -137,6 +142,8 @@ public class SelectActivity extends BaseActivity {
                     bdManager.setLatLng(selectLatLng);
                     binding.tvLatitudeSelect.setText(String.valueOf(selectLatLng.latitude));
                     binding.tvLongitudeSelect.setText(String.valueOf(selectLatLng.longitude));
+                    inputMethodManager.hideSoftInputFromWindow(binding.etContentSelect.getWindowToken(), 0);
+                    binding.recSelect.setVisibility(View.GONE);
                 }
             }
         });
@@ -157,6 +164,15 @@ public class SelectActivity extends BaseActivity {
                 {
                     binding.tvAddressSelect.setText(reverseGeoCodeResult.getAddress());
                 }
+            }
+        });
+
+        adapter.setOnItemClickListener(new SelectRecycleAdapter.OnItemClickListener() {
+            @Override
+            public void OnClick(SelectInfo selectInfo) {
+                LatLng selectLL = new LatLng(selectInfo.getLatitude(), selectInfo.getLongtitude());
+                baiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(selectLL));
+                baiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(18f));
             }
         });
     }
