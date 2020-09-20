@@ -24,9 +24,11 @@ import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 
+import java.util.HashMap;
 import java.util.List;
 
 import john.zhao.arunningman.BaseActivity;
+import john.zhao.arunningman.LiveDataBus;
 import john.zhao.arunningman.R;
 import john.zhao.arunningman.adapter.SelectRecycleAdapter;
 import john.zhao.arunningman.databinding.ActivitySelectBinding;
@@ -43,6 +45,7 @@ public class SelectActivity extends BaseActivity {
     private SelectRecycleAdapter adapter;
     private InputMethodManager inputMethodManager;
 
+    private String address;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +63,35 @@ public class SelectActivity extends BaseActivity {
         binding.setSelectActivity(this);
 
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    }
+
+    public void gone(){
+        binding.recSelect.setVisibility(View.GONE);
+        binding.ivCloseSelect.setVisibility(View.GONE);
+        inputMethodManager.hideSoftInputFromWindow(binding.etContentSelect.getWindowToken(), 0);
+    }
+
+
+    public void complete()
+    {
+        HashMap hashMap = new HashMap();
+        hashMap.put("address", address);
+        hashMap.put("latLng", selectLatLng);
+        LiveDataBus.get().with("EditActivity").setStickyData(hashMap);
+        finish();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        binding.mapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        binding.mapView.onPause();
     }
 
     @Override
@@ -96,10 +128,11 @@ public class SelectActivity extends BaseActivity {
                 {
                      bdManager.startPoi(charSequence.toString());
                      binding.recSelect.setVisibility(View.VISIBLE);
+                     binding.ivCloseSelect.setVisibility(View.VISIBLE);
                 }
                 else
                 {
-                    binding.recSelect.setVisibility(View.GONE);
+                    gone();
                 }
 
             }
@@ -162,7 +195,8 @@ public class SelectActivity extends BaseActivity {
                 }
                 else
                 {
-                    binding.tvAddressSelect.setText(reverseGeoCodeResult.getAddress());
+                    address = reverseGeoCodeResult.getAddress();
+                    binding.tvAddressSelect.setText(address);
                 }
             }
         });
@@ -173,6 +207,7 @@ public class SelectActivity extends BaseActivity {
                 LatLng selectLL = new LatLng(selectInfo.getLatitude(), selectInfo.getLongtitude());
                 baiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(selectLL));
                 baiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(18f));
+                gone();
             }
         });
     }

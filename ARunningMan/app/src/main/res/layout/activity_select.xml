@@ -80,6 +80,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
+                        android:onClick="@{()->SelectActivity.gone()}"
                         android:src="@drawable/ic_close_24dp"
                         android:visibility="gone" />
                 </LinearLayout>
@@ -138,6 +139,7 @@
                     android:textColor="@color/text_main"
                     android:textSize="14sp"
                     android:textStyle="bold"
+                    android:onClick="@{()->SelectActivity.complete()}"
                     android:theme="@style/Theme.MaterialComponents.Light"
                     app:backgroundTint="@color/main_bac"
                     app:cornerRadius="10dp" />
