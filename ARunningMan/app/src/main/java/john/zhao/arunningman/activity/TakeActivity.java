@@ -1,45 +1,41 @@
 package john.zhao.arunningman.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-
-import com.baidu.location.BDAbstractLocationListener;
-import com.baidu.location.BDLocation;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.model.LatLng;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 
 import john.zhao.arunningman.BaseActivity;
+import john.zhao.arunningman.LiveDataBus;
 import john.zhao.arunningman.R;
+import john.zhao.arunningman.databinding.ActivityTakeBinding;
+import john.zhao.arunningman.room.Address;
 
 public class TakeActivity extends BaseActivity {
 
-    private MapView mMapView;
-    private BaiduMap mBaiduMap;
-    private LocationClient mLocationClien;
-    private boolean isFirst = true;
+    private ActivityTakeBinding binding;
+    private Intent intent;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_take);
-        initView();
+        init();
         initEvent();
     }
 
     @Override
     public void init() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_take);
+        binding.include.setTakeActivity(this);
 
+        intent = new Intent();
     }
 
     @Override
-    public void initView() {
-        mMapView = findViewById(R.id.mapView);
+    public void initView()
+    {
     }
 
     @Override
@@ -49,70 +45,63 @@ public class TakeActivity extends BaseActivity {
 
     @Override
     public void initEvent() {
-        mBaiduMap = mMapView.getMap();
-        mBaiduMap.setMyLocationEnabled(true);
-        mLocationClien = new LocationClient(this);
-        LocationClientOption locationClientOption = new LocationClientOption();
-        locationClientOption.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-        locationClientOption.setCoorType("gcj02");
-        locationClientOption.setScanSpan(0);
-        locationClientOption.setIsNeedAddress(true);
-        locationClientOption.setIsNeedLocationDescribe(true);
-        //locationClientOption.setLocationNotify(true);
-        locationClientOption.setOpenGps(true);
-
-        mLocationClien.setLocOption(locationClientOption);
-        mLocationClien.registerLocationListener(new MyLocationListener());
-        mLocationClien.start();
+        LiveDataBus.get().with("TakeActivity").observerSticky(this, new TakeActivityObserver(), true);
     }
 
-    private class MyLocationListener extends BDAbstractLocationListener{
-
-        @Override
-        public void onReceiveLocation(BDLocation bdLocation) {
-            if(bdLocation == null)
-            {
-                return;
-            }
-            MyLocationData myLocationData = new MyLocationData.Builder()
-                    .accuracy(0)
-                    .direction(100f)
-                    .latitude(bdLocation.getLatitude())
-                    .longitude(bdLocation.getLongitude())
-                    .build();
-            mBaiduMap.setMyLocationData(myLocationData);
-
-            if(isFirst)
-            {
-                LatLng latLng = new LatLng(bdLocation.getLongitude(), bdLocation.getLongitude());
-                MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(latLng);
-                MapStatusUpdate update1 = MapStatusUpdateFactory.zoomBy(18f);
-                mBaiduMap.setMapStatus(update);
-                mBaiduMap.animateMapStatus(update1);
-                isFirst = false;
-            }
-            mLocationClien.stop();
+    public void startActivity(int  type)
+    {
+        if(type == 1)
+        {
+            intent.setClass(this, EditActivity.class);
+            startActivity(intent);
         }
+        else if(type == 2)
+        {
+            intent.setClass(this, AddressActivity.class);
+            startActivity(intent);
+        }
+
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
-        mMapView.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mMapView.onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mMapView.onDestroy();
-        mLocationClien.stop();
-        mBaiduMap.setMyLocationEnabled(false);
-        mBaiduMap = null;
+    }
+
+    public void showBottomDialog()
+    {
+
+    }
+
+    public void commit()
+    {
+
+    }
+
+    private class TakeActivityObserver implements Observer<Address>
+    {
+        @Override
+        public void onChanged(Address address)
+        {
+            if(address.getType() == 1)
+            {
+                binding.include.setTakeAddress(address);
+            }
+            else
+            {
+                binding.include.setCollectAddress(address);
+            }
+        }
     }
 }

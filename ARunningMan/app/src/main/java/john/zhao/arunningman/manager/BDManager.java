@@ -52,6 +52,7 @@ public class BDManager {
             @Override
             public void onGetSuggestionResult(SuggestionResult suggestionResult)
             {
+                list.clear();
                 List<SuggestionResult.SuggestionInfo> allSuggestions = suggestionResult.getAllSuggestions();
                 if(allSuggestions.size() > 0)
                 {
@@ -61,9 +62,12 @@ public class BDManager {
                         SelectInfo info = new SelectInfo();
                         info.setAddress(suggestionInfo.key);
                         info.setCity(suggestionInfo.city + suggestionInfo.district);
-                        info.setLatitude(suggestionInfo.pt.latitude);
-                        info.setLongtitude(suggestionInfo.pt.longitude);
-                        list.add(info);
+                        if(suggestionInfo.pt != null)
+                        {
+                            info.setLatitude(suggestionInfo.pt.latitude);
+                            info.setLongtitude(suggestionInfo.pt.longitude);
+                        }
+                            list.add(info);
                     }
                     onResultListener.resut(list);
                 }
