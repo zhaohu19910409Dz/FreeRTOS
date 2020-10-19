@@ -43,9 +43,11 @@ public class AddressRecAdapter extends RecyclerView.Adapter<AddressRecAdapter.Vi
         holder.tvName.setText(list.get(position).getName());
         holder.tvPhone.setText(list.get(position).getPhone());
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 listener.onClick(list.get(position));
             }
         });

@@ -87,7 +87,9 @@ public class SelectActivity extends BaseActivity {
 
     public void complete()
     {
-        if(type == 1) {
+        Log.i("John","SelectActivity complete type:" + type);
+        if(type == 1)
+        {
             HashMap hashMap = new HashMap();
             hashMap.put("address", address);
             hashMap.put("latLng", selectLatLng);
@@ -98,6 +100,7 @@ public class SelectActivity extends BaseActivity {
         {
             if(behavior.getState() != BottomSheetBehavior.STATE_EXPANDED)
             {
+                Log.i("John", "expanded");
                 behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 binding.include.tvAddressBottomSelect.setText(address);
                 binding.include.boxMissBottomSelect.setChecked(true);
@@ -173,6 +176,7 @@ public class SelectActivity extends BaseActivity {
         binding.recSelect.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         binding.recSelect.setAdapter(adapter);
 
+        binding.include.setSelectActivity(this);
         bottomSheet = binding.nesSelect;
         behavior = BottomSheetBehavior.from(bottomSheet);
         behavior.setHideable(true);

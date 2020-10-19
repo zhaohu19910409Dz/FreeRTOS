@@ -26,7 +26,8 @@ public class AddressActivity extends BaseActivity {
     private AddressManager manager;
     private int TYPE = 2;
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
 
@@ -37,44 +38,54 @@ public class AddressActivity extends BaseActivity {
     }
 
     @Override
-    public void init() {
+    public void init()
+    {
         manager = new AddressManager(this);
     }
 
     @Override
-    public void initView() {
+    public void initView()
+    {
         tvAdd = findViewById(R.id.tv_add_address);
         recyclerView =findViewById(R.id.rec_address);
     }
 
     @Override
-    public void initData() {
+    public void initData()
+    {
         adapter = new AddressRecAdapter();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-        manager.getAddressLive().observe(this, new Observer<List<Address>>() {
+        manager.getAddressLive().observe(this, new Observer<List<Address>>()
+        {
             @Override
-            public void onChanged(List<Address> addresses) {
+            public void onChanged(List<Address> addresses)
+            {
                 adapter.setList(addresses);
             }
         });
     }
 
     @Override
-    public void initEvent() {
-        tvAdd.setOnClickListener(new View.OnClickListener() {
+    public void initEvent()
+    {
+        tvAdd.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 Intent intent = new Intent(AddressActivity.this, SelectActivity.class);
                 intent.putExtra("type", TYPE);
                 startActivity(intent);
             }
         });
 
-        adapter.setOnItemClickListener(new AddressRecAdapter.onItemClickListener() {
+        adapter.setOnItemClickListener(new AddressRecAdapter.onItemClickListener()
+        {
             @Override
-            public void onClick(Address address) {
+            public void onClick(Address address)
+            {
 
             }
         });

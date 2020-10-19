@@ -7,7 +7,8 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 @Database(entities = {Address.class}, version = 1, exportSchema = false)
-public abstract class AddressDataBase extends RoomDatabase {
+public abstract class AddressDataBase extends RoomDatabase
+{
 
     private static AddressDataBase addressDataBase;
 

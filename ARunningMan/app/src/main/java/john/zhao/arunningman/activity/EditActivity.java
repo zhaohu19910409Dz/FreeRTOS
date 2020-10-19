@@ -122,8 +122,11 @@ public class EditActivity extends BaseActivity {
         address.setPhone(binding.etPhoneEdit.getText().toString());
         address.setSex(sex);
 
-        address.setLatitude(latLng.latitude);
-        address.setLongitude(latLng.longitude);
+        if(latLng != null)
+        {
+            address.setLatitude(latLng.latitude);
+            address.setLongitude(latLng.longitude);
+        }
 
         LiveDataBus.get().with("TakeActivity").setStickyData(address);
         finish();

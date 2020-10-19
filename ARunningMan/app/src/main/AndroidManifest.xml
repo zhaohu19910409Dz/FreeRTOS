@@ -31,6 +31,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.SelectActivity"></activity>
+        <activity android:name=".activity.EditActivity"></activity>
+        <activity android:name=".activity.AddressActivity"></activity>
         <activity android:name=".MainActivity"></activity>
 
         <provider

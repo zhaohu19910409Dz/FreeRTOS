@@ -14,7 +14,7 @@ public class AddressManager {
 
     public AddressManager(Context context)
     {
-        AddressDataBase.get(context).getAddressDao();
+        addressDao = AddressDataBase.get(context).getAddressDao();
     }
 
     public LiveData<List<Address>> getAddressLive()
@@ -41,7 +41,8 @@ public class AddressManager {
             this.addressDao = addressDao;
         }
         @Override
-        protected Void doInBackground(Address... addresses) {
+        protected Void doInBackground(Address... addresses)
+        {
             addressDao.addAddress(addresses);
             return null;
         }

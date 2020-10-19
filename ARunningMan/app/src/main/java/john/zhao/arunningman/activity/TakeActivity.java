@@ -2,6 +2,7 @@ package john.zhao.arunningman.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -11,12 +12,14 @@ import john.zhao.arunningman.BaseActivity;
 import john.zhao.arunningman.LiveDataBus;
 import john.zhao.arunningman.R;
 import john.zhao.arunningman.databinding.ActivityTakeBinding;
+import john.zhao.arunningman.manager.BDMap;
 import john.zhao.arunningman.room.Address;
 
 public class TakeActivity extends BaseActivity {
 
     private ActivityTakeBinding binding;
     private Intent intent;
+    private BDMap map;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,6 +39,8 @@ public class TakeActivity extends BaseActivity {
     @Override
     public void initView()
     {
+        map = new BDMap(this);
+        map.location(0, binding.mapView.getMap());
     }
 
     @Override
@@ -50,6 +55,7 @@ public class TakeActivity extends BaseActivity {
 
     public void startActivity(int  type)
     {
+        Log.i("John", "TakeActivity::startActivity type:" + type);
         if(type == 1)
         {
             intent.setClass(this, EditActivity.class);
@@ -65,18 +71,25 @@ public class TakeActivity extends BaseActivity {
 
 
     @Override
-    protected void onResume() {
+    protected void onResume()
+    {
         super.onResume();
+        binding.mapView.onResume();
     }
 
     @Override
-    protected void onPause() {
+    protected void onPause()
+    {
         super.onPause();
+        binding.mapView.onPause();
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onDestroy()
+    {
         super.onDestroy();
+        binding.mapView.onDestroy();
+        map.destroy();
     }
 
     public void showBottomDialog()
