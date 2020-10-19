@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import john.zhao.arunningman.BaseActivity;
+import john.zhao.arunningman.LiveDataBus;
 import john.zhao.arunningman.R;
 import john.zhao.arunningman.adapter.AddressRecAdapter;
 import john.zhao.arunningman.room.Address;
@@ -86,7 +87,8 @@ public class AddressActivity extends BaseActivity {
             @Override
             public void onClick(Address address)
             {
-
+                LiveDataBus.get().with("TakeActivity").setStickyData(address);
+                finish();
             }
         });
     }
