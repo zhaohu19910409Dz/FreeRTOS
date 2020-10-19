@@ -72,13 +72,15 @@ public class SelectActivity extends BaseActivity {
     public void init() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_select);
         binding.setSelectActivity(this);
+        binding.include.setSelectActivity(this);
 
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         Intent intent = getIntent();
         type = intent.getIntExtra("type", 0);
     }
 
-    public void gone(){
+    public void gone()
+    {
         binding.recSelect.setVisibility(View.GONE);
         binding.ivCloseSelect.setVisibility(View.GONE);
         inputMethodManager.hideSoftInputFromWindow(binding.etContentSelect.getWindowToken(), 0);
@@ -87,7 +89,8 @@ public class SelectActivity extends BaseActivity {
 
     public void complete()
     {
-        if(type == 1) {
+        if(type == 1)
+        {
             HashMap hashMap = new HashMap();
             hashMap.put("address", address);
             hashMap.put("latLng", selectLatLng);
@@ -115,10 +118,11 @@ public class SelectActivity extends BaseActivity {
 
     public void addAddress()
     {
+        Log.d("John", "SelectActivity::addAddress");
         if(TextUtils.isEmpty(binding.include.etAddressBottomSelect.getText().toString()))
         {
             XToast.warning(this, "address empty").show();
-            return;
+            return ;
         }
         else if(TextUtils.isEmpty(binding.include.etNameBottomSelect.getText().toString()))
         {

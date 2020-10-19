@@ -37,7 +37,8 @@ public class AddressActivity extends BaseActivity {
     }
 
     @Override
-    public void init() {
+    public void init()
+    {
         manager = new AddressManager(this);
     }
 
@@ -53,9 +54,11 @@ public class AddressActivity extends BaseActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-        manager.getAddressLive().observe(this, new Observer<List<Address>>() {
+        manager.getAddressLive().observe(this, new Observer<List<Address>>()
+        {
             @Override
-            public void onChanged(List<Address> addresses) {
+            public void onChanged(List<Address> addresses)
+            {
                 adapter.setList(addresses);
             }
         });
